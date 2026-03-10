@@ -1,0 +1,32 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+#include <set>
+using namespace std;
+
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    int num_queries, query_type, query;
+    set<int> ints;
+    cin >> num_queries;
+    for (int i = 0; i < num_queries; i++) {
+        cin >> query_type >> query;
+        if (query_type == 1) {
+            ints.insert(query);
+        } else if (query_type == 2) {
+            ints.erase(query);
+        } else {
+            set<int>::iterator itr = ints.find(query);
+            if (itr == ints.end()) {
+                cout << "No\n";
+            } else {
+                cout << "Yes\n";
+            }
+        }
+    }
+    return 0;
+}

@@ -1,0 +1,8 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    // Print 108 using 9 and 12
+    cout << 9 * 12 << endl;
+    return 0;
+}

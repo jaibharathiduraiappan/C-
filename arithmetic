@@ -1,0 +1,14 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    int a = 8;
+    int b = 4;
+
+    cout << a + b << endl; // Addition (12)
+    cout << a - b << endl; // Subtraction (4)
+    cout << a / b << endl; // Division (2)
+    cout << a * b << endl; // Multiplication (32)
+
+    return 0;
+}

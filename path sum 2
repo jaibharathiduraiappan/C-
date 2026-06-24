@@ -1,0 +1,32 @@
+#include <vector>
+
+using namespace std;
+
+class Solution {
+private:
+    vector<vector<int>> result;
+    vector<int> currentPath;
+
+    void dfs(TreeNode* node, int targetSum) {
+        if (!node) return;
+
+        currentPath.push_back(node->val);
+
+        if (!node->left && !node->right && targetSum == node->val) {
+            result.push_back(currentPath);
+        } else {
+            dfs(node->left, targetSum - node->val);
+            dfs(node->right, targetSum - node->val);
+        }
+
+        currentPath.pop_back();
+    }
+
+public:
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        result.clear();
+        currentPath.clear();
+        dfs(root, targetSum);
+        return result;
+    }
+};

@@ -1,50 +1,53 @@
+#include <vector>
+#include <algorithm>
+#include <climits>
+
+using namespace std;
+
 class Solution {
-    public int maximumGap(int[] nums) {
-        if (nums == null || nums.length < 2) {
+public:
+    int maximumGap(vector<int>& nums) {
+        if (nums.empty() || nums.size() < 2) {
             return 0;
         }
 
-        int min = nums[0];
-        int max = nums[0];
+        int min_val = nums[0];
+        int max_val = nums[0];
         for (int num : nums) {
-            min = Math.min(min, num);
-            max = Math.max(max, num);
+            min_val = min(min_val, num);
+            max_val = max(max_val, num);
         }
 
-        if (min == max) {
+        if (min_val == max_val) {
             return 0;
         }
 
-        int n = nums.length;
-        int bucketSize = Math.max(1, (max - min) / (n - 1));
-        int bucketCount = (max - min) / bucketSize + 1;
+        int n = nums.size();
+        int bucket_size = max(1, (max_val - min_val) / (n - 1));
+        int bucket_count = (max_val - min_val) / bucket_size + 1;
 
-        int[] bucketMin = new int[bucketCount];
-        int[] bucketMax = new int[bucketCount];
-        boolean[] bucketEmpty = new boolean[bucketCount];
-        
-        java.util.Arrays.fill(bucketMin, Integer.MAX_VALUE);
-        java.util.Arrays.fill(bucketMax, Integer.MIN_VALUE);
-        java.util.Arrays.fill(bucketEmpty, true);
+        vector<int> bucket_min(bucket_count, INT_MAX);
+        vector<int> bucket_max(bucket_count, INT_MIN);
+        vector<bool> bucket_empty(bucket_count, true);
 
         for (int num : nums) {
-            int idx = (num - min) / bucketSize;
-            bucketMin[idx] = Math.min(bucketMin[idx], num);
-            bucketMax[idx] = Math.max(bucketMax[idx], num);
-            bucketEmpty[idx] = false;
+            int idx = (num - min_val) / bucket_size;
+            bucket_min[idx] = min(bucket_min[idx], num);
+            bucket_max[idx] = max(bucket_max[idx], num);
+            bucket_empty[idx] = false;
         }
 
-        int maxGap = 0;
-        int previousMax = min;
+        int max_gap = 0;
+        int previous_max = min_val;
 
-        for (int i = 0; i < bucketCount; i++) {
-            if (bucketEmpty[i]) {
+        for (int i = 0; i < bucket_count; i++) {
+            if (bucket_empty[i]) {
                 continue;
             }
-            maxGap = Math.max(maxGap, bucketMin[i] - previousMax);
-            previousMax = bucketMax[i];
+            max_gap = max(max_gap, bucket_min[i] - previous_max);
+            previous_max = bucket_max[i];
         }
 
-        return maxGap;
+        return max_gap;
     }
-}
+};

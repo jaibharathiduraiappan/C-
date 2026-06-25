@@ -1,0 +1,89 @@
+import java.util.*;
+
+class Solution {
+    public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
+        List<List<String>> result = new ArrayList<>();
+        Set<String> dict = new HashSet<>(wordList);
+        if (!dict.contains(endWord)) {
+            return result;
+        }
+
+        Map<String, List<String>> adj = new HashMap<>();
+        Map<String, Integer> distance = new HashMap<>();
+        
+        dict.add(beginWord);
+        bfs(beginWord, endWord, dict, adj, distance);
+        
+        if (distance.containsKey(endWord)) {
+            List<String> path = new ArrayList<>();
+            path.add(beginWord);
+            dfs(beginWord, endWord, adj, distance, path, result);
+        }
+        
+        return result;
+    }
+
+    private void bfs(String beginWord, String endWord, Set<String> dict, Map<String, List<String>> adj, Map<String, Integer> distance) {
+        Queue<String> queue = new LinkedList<>();
+        queue.offer(beginWord);
+        distance.put(beginWord, 0);
+
+        for (String word : dict) {
+            adj.put(word, new ArrayList<>());
+        }
+
+        boolean found = false;
+
+        while (!queue.isEmpty() && !found) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                String curr = queue.poll();
+                int currDist = distance.get(curr);
+                
+                char[] chars = curr.toCharArray();
+                for (int j = 0; j < chars.length; j++) {
+                    char old = chars[j];
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        if (c == old) continue;
+                        chars[j] = c;
+                        String next = new String(chars);
+
+                        if (dict.contains(next)) {
+                            if (!distance.containsKey(next)) {
+                                distance.put(next, currDist + 1);
+                                if (next.equals(endWord)) {
+                                    found = true;
+                                } else {
+                                    queue.offer(next);
+                                }
+                            }
+                            if (distance.get(next) == currDist + 1) {
+                                adj.get(curr).add(next);
+                            }
+                        }
+                    }
+                    chars[j] = old;
+                }
+            }
+        }
+    }
+
+    private void dfs(String curr, String endWord, Map<String, List<String>> adj, Map<String, Integer> distance, List<String> path, List<List<String>> result) {
+        if (curr.equals(endWord)) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+
+        if (!adj.containsKey(curr)) {
+            return;
+        }
+
+        for (String next : adj.get(curr)) {
+            if (distance.get(next) == distance.get(curr) + 1) {
+                path.add(next);
+                dfs(next, endWord, adj, distance, path, result);
+                path.remove(path.size() - 1);
+            }
+        }
+    }
+}

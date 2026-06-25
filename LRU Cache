@@ -1,0 +1,37 @@
+#include <unordered_map>
+#include <list>
+
+class LRUCache {
+private:
+    int cap;
+    std::list<std::pair<int, int>> cache;
+    std::unordered_map<int, std::list<std::pair<int, int>>::iterator> map;
+
+public:
+    LRUCache(int capacity) {
+        cap = capacity;
+    }
+    
+    int get(int key) {
+        if (map.find(key) == map.end()) {
+            return -1;
+        }
+        cache.splice(cache.begin(), cache, map[key]);
+        return map[key]->second;
+    }
+    
+    void put(int key, int value) {
+        if (map.find(key) != map.end()) {
+            cache.splice(cache.begin(), cache, map[key]);
+            map[key]->second = value;
+            return;
+        }
+        if (cache.size() == cap) {
+            int last_key = cache.back().first;
+            cache.pop_back();
+            map.erase(last_key);
+        }
+        cache.push_front({key, value});
+        map[key] = cache.begin();
+    }
+};
